@@ -193,8 +193,11 @@ module RETS
 
       headers = headers ? @headers.merge(headers) : @headers
       headers = headers.merge({'accept-encoding' => 'none'})
-
-      http = ::Net::HTTP.new(args[:url].host, args[:url].port)
+      
+      # Fixie, needs cleanup
+      _, fixie_username, fixie_password, fixie_host, fixie_port = ENV["FIXIE_URL"].gsub(/(:|\/|@)/,' ').squeeze(' ').split
+      
+      http = ::Net::HTTP.new(args[:url].host, args[:url].port, fixie_host, fixie_port, fixie_username, fixie_password)
       http.read_timeout = args[:read_timeout] if args[:read_timeout]
       http.set_debug_output(@config[:debug_output]) if @config[:debug_output]
 
